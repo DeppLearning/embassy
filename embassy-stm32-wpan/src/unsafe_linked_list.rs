@@ -43,12 +43,12 @@ impl LinkedListNode {
     }
 
     pub unsafe fn is_empty(mut p_list_head: *mut LinkedListNode) -> bool {
-        interrupt::free(|_| ptr::read_volatile(p_list_head).next == p_list_head)
+        interrupt::free(|| ptr::read_volatile(p_list_head).next == p_list_head)
     }
 
     /// Insert `node` after `list_head` and before the next node
     pub unsafe fn insert_head(mut p_list_head: *mut LinkedListNode, mut p_node: *mut LinkedListNode) {
-        interrupt::free(|_| {
+        interrupt::free(|| {
             let mut list_head = ptr::read_volatile(p_list_head);
             if p_list_head != list_head.next {
                 let mut node_next = ptr::read_volatile(list_head.next);
@@ -82,7 +82,7 @@ impl LinkedListNode {
 
     /// Insert `node` before `list_tail` and after the second-to-last node
     pub unsafe fn insert_tail(mut p_list_tail: *mut LinkedListNode, mut p_node: *mut LinkedListNode) {
-        interrupt::free(|_| {
+        interrupt::free(|| {
             let mut list_tail = ptr::read_volatile(p_list_tail);
             if p_list_tail != list_tail.prev {
                 let mut node_prev = ptr::read_volatile(list_tail.prev);
@@ -116,7 +116,7 @@ impl LinkedListNode {
 
     /// Remove `node` from the linked list
     pub unsafe fn remove_node(mut p_node: *mut LinkedListNode) {
-        interrupt::free(|_| {
+        interrupt::free(|| {
             // trace!("remove node: {:x}", p_node);
             // apparently linked list nodes are not always aligned.
             // if more hardfaults occur, more of these may need to be converted to unaligned.
@@ -145,7 +145,7 @@ impl LinkedListNode {
 
     /// Remove `list_head` and return a pointer to the `node`.
     pub unsafe fn remove_head(mut p_list_head: *mut LinkedListNode) -> Option<*mut LinkedListNode> {
-        interrupt::free(|_| {
+        interrupt::free(|| {
             let list_head = ptr::read_volatile(p_list_head);
 
             if list_head.next == p_list_head {
@@ -162,7 +162,7 @@ impl LinkedListNode {
 
     /// Remove `list_tail` and return a pointer to the `node`.
     pub unsafe fn remove_tail(mut p_list_tail: *mut LinkedListNode) -> Option<*mut LinkedListNode> {
-        interrupt::free(|_| {
+        interrupt::free(|| {
             let list_tail = ptr::read_volatile(p_list_tail);
 
             if list_tail.prev == p_list_tail {
@@ -178,7 +178,7 @@ impl LinkedListNode {
     }
 
     pub unsafe fn insert_node_after(mut node: *mut LinkedListNode, mut ref_node: *mut LinkedListNode) {
-        interrupt::free(|_| {
+        interrupt::free(|| {
             (*node).next = (*ref_node).next;
             (*node).prev = ref_node;
             (*ref_node).next = node;
@@ -189,7 +189,7 @@ impl LinkedListNode {
     }
 
     pub unsafe fn insert_node_before(mut node: *mut LinkedListNode, mut ref_node: *mut LinkedListNode) {
-        interrupt::free(|_| {
+        interrupt::free(|| {
             (*node).next = ref_node;
             (*node).prev = (*ref_node).prev;
             (*ref_node).prev = node;
@@ -200,7 +200,7 @@ impl LinkedListNode {
     }
 
     pub unsafe fn get_size(mut list_head: *mut LinkedListNode) -> usize {
-        interrupt::free(|_| {
+        interrupt::free(|| {
             let mut size = 0;
             let mut temp: *mut LinkedListNode = core::ptr::null_mut::<LinkedListNode>();
 
@@ -217,7 +217,7 @@ impl LinkedListNode {
     }
 
     pub unsafe fn get_next_node(mut p_ref_node: *mut LinkedListNode) -> *mut LinkedListNode {
-        interrupt::free(|_| {
+        interrupt::free(|| {
             let ref_node = ptr::read_volatile(p_ref_node);
 
             // Allowed because a removed node is not seen by another core
@@ -226,7 +226,7 @@ impl LinkedListNode {
     }
 
     pub unsafe fn get_prev_node(mut p_ref_node: *mut LinkedListNode) -> *mut LinkedListNode {
-        interrupt::free(|_| {
+        interrupt::free(|| {
             let ref_node = ptr::read_volatile(p_ref_node);
 
             // Allowed because a removed node is not seen by another core
