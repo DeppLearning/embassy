@@ -28,7 +28,7 @@ embassy-embedded-hal = { version = "0.1.0", path = "../embassy-embedded-hal" }
 embassy-net-driver = { version = "0.2.0", path = "../embassy-net-driver", optional=true }
 
 defmt = { version = "0.3", optional = true }
-cortex-m = "0.7.4"
+cortex-m = { git = "https://github.com/rust-embedded/cortex-m", rev = "ec6b3ba49db60b23885921d238d3a9e86cf3e9e9" }
 heapless = "0.8"
 aligned = "0.4.1"
 
