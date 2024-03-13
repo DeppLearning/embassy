@@ -45,7 +45,7 @@ document-features = "0.2.7"
 portable-atomic = { version = "1.5", optional = true }
 
 # arch-cortex-m dependencies
-cortex-m = { version = "0.7.6", optional = true }
+cortex-m = { version = "0.7.4", optional = true }
 
 # arch-wasm dependencies
 wasm-bindgen = { version = "0.2.82", optional = true }
