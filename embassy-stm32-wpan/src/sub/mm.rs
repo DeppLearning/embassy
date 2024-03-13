@@ -59,7 +59,7 @@ impl MemoryManager {
             .await;
 
             Ipcc::send(channels::cpu1::IPCC_MM_RELEASE_BUFFER_CHANNEL, || {
-                interrupt::free(|_| unsafe {
+                interrupt::free(|| unsafe {
                     // CS required while moving nodes
                     while let Some(node_ptr) = LinkedListNode::remove_head(LOCAL_FREE_BUF_QUEUE.as_mut_ptr()) {
                         LinkedListNode::insert_head(FREE_BUF_QUEUE.as_mut_ptr(), node_ptr);
@@ -74,7 +74,7 @@ impl MemoryManager {
 impl evt::MemoryManager for MemoryManager {
     /// SAFETY: passing a pointer to something other than a managed event packet is UB
     unsafe fn drop_event_packet(evt: *mut EvtPacket) {
-        interrupt::free(|_| unsafe {
+        interrupt::free(|| unsafe {
             LinkedListNode::insert_head(LOCAL_FREE_BUF_QUEUE.as_mut_ptr(), evt as *mut _);
         });
 
