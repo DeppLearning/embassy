@@ -62,7 +62,7 @@ embedded-storage-async = { version = "0.4.1" }
 defmt = { version = "0.3", optional = true }
 log = { version = "0.4.14", optional = true }
 cortex-m-rt = ">=0.6.15,<0.8"
-cortex-m = "0.7.6"
+cortex-m = { git = "https://github.com/rust-embedded/cortex-m", rev = "ec6b3ba49db60b23885921d238d3a9e86cf3e9e9"}
 futures = { version = "0.3.17", default-features = false, features = ["async-await"] }
 rand_core = "0.6.3"
 sdio-host = "0.5.0"
